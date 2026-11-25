@@ -9,6 +9,7 @@
   },
   "scripts": {
     "sync-core": "node scripts/sync-core.mjs recipes/node-cron && node scripts/sync-core.mjs recipes/nextjs-site",
+    "setup": "node scripts/setup.mjs",
     "typecheck": "npm --prefix packages/core run typecheck && npm --prefix recipes/node-cron run typecheck && npm --prefix recipes/nextjs-site run typecheck",
     "test": "npm --prefix packages/core test",
     "build": "npm --prefix recipes/nextjs-site run build",

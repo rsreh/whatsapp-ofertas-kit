@@ -135,6 +135,29 @@ Sem essas variáveis, o kit envia o link direto do produto. Veja
 
 Para IA: [`AGENTS.md`](AGENTS.md) e [`llms.txt`](llms.txt).
 
+## Deploy em 1 clique (opcional)
+
+Se você não quer clonar e configurar manualmente, use os botões abaixo. Eles
+criam uma cópia do repositório na sua conta e abrem o painel do provedor com
+as variáveis de ambiente para você preencher.
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/SEU-USUARIO-GITHUB/whatsapp-ofertas-kit&envs=EVOLUTION_API_URL,EVOLUTION_API_KEY,EVOLUTION_INSTANCE,WHATSAPP_TARGET,PUBLIC_BASE_URL,LINK_SECRET,CRON_SECRET,ADMIN_TOKEN,TIMEZONE,SEND_HOUR&optionalEnvs=PUBLIC_BASE_URL,LINK_SECRET,CRON_SECRET,ADMIN_TOKEN)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/SEU-USUARIO-GITHUB/whatsapp-ofertas-kit)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SEU-USUARIO-GITHUB/whatsapp-ofertas-kit&root-directory=recipes%2Fnextjs-site&env=EVOLUTION_API_URL,EVOLUTION_API_KEY,EVOLUTION_INSTANCE,WHATSAPP_TARGET,PUBLIC_BASE_URL,LINK_SECRET,CRON_SECRET,ADMIN_TOKEN)
+
+> Substitua `seu-usuario` pelo seu usuário/org do GitHub antes de publicar.
+
+## Setup interativo
+
+Para quem não quer editar `.env` manualmente:
+
+```bash
+npm run setup -- node-cron      # gera recipes/node-cron/.env
+npm run setup -- nextjs-site    # gera recipes/nextjs-site/.env
+```
+
+O script pergunta as variáveis e preserva os comentários do `.env.example`.
+
 ## Comandos do repositório
 
 ```bash

@@ -75,6 +75,56 @@ evolution.seudominio.com {
 Atualize `PUBLIC_BASE_URL`, `SERVER_URL` e `EVOLUTION_API_URL` para as URLs
 públicas.
 
+## Railway template (1 clique)
+
+Para um deploy verdadeiro em 1 clique, publique um **Railway Template** a
+partir do arquivo `templates/railway-template.json` (serviços: evolution,
+postgres, redis, app). Passos resumidos:
+
+1. Faça fork do repositório na sua conta.
+2. No Railway, crie um template a partir do fork (ou importe o JSON).
+3. O template cria os 4 serviços e pede as variáveis marcadas como `required`.
+4. Após o deploy, gere domínios públicos para `evolution` e `app` e atualize
+   `SERVER_URL` e `PUBLIC_BASE_URL`.
+
+Enquanto o template não estiver publicado, use o fluxo manual da seção abaixo.
+
+## Railway (recomendado para Evolution + app juntos)
+
+O Railway tem template oficial da Evolution API. O fluxo mais rápido:
+
+1. Crie a Evolution a partir do template do Railway (pesquise "Evolution API"
+   no catálogo de templates do Railway). Anote a URL pública e a chave.
+2. Faça fork deste repositório na sua conta.
+3. No Railway, **New Project → Deploy from GitHub repo** e selecione a pasta
+   `recipes/node-cron` (root directory). O `railway.json` e o `Dockerfile` da
+   pasta já configuram o build.
+4. Em **Variables**, preencha as variáveis mínimas (ver abaixo).
+5. Em **Settings → Healthcheck**, use `/health`.
+6. Gere um domínio público (Settings → Domains) e use-o em `PUBLIC_BASE_URL`.
+
+Dica: se quiser tudo em um só projeto Railway, crie dois serviços no mesmo
+projeto: um para a Evolution (via template) e outro para este kit (via GitHub).
+
+## Render
+
+1. Faça fork do repositório.
+2. No Render, **New → Blueprint** e aponte para o `render.yaml` da raiz.
+3. O Blueprint cria o serviço `whatsapp-ofertas-node-cron` com as variáveis
+   marcadas como `sync: false` para você preencher no painel.
+4. O plano free dorme após inatividade; use um monitor (UptimeRobot) batendo
+   em `/health` a cada 5 minutos para manter acordado, ou use o cron do GitHub
+   Actions (que também acorda o serviço).
+
+## Fly.io
+
+```bash
+cd recipes/node-cron
+fly launch --no-deploy   # aceite o fly.toml existente
+fly secrets set EVOLUTION_API_URL=... EVOLUTION_API_KEY=... EVOLUTION_INSTANCE=... WHATSAPP_TARGET=... CRON_SECRET=... ADMIN_TOKEN=...
+fly deploy
+```
+
 ## Vercel (Next.js)
 
 1. Importe o repositório e defina o root directory como
@@ -114,6 +164,24 @@ ADMIN_TOKEN="..."
 TIMEZONE="America/Sao_Paulo"
 SEND_HOUR="9"
 ```
+
+## Plataformas gratuitas (resumo)
+
+| Plataforma | Free tier | Dorme? | Bom para |
+|---|---|---|---|
+| Railway | US$ 5 de crédito/mês | não (com crédito) | Evolution + app no mesmo projeto |
+| Render | 750h/mês web | sim (15 min inativo) | app pequeno com cron externo |
+| Fly.io | 3 VMs compartilhadas | sim (auto-stop) | app pequeno, baixa latência |
+| Vercel | hobby ilimitado (com limites) | n/a (serverless) | Next.js + preview card |
+| Koyeb | free tier | sim | alternativa simples |
+
+Para quem quer **praticidade máxima**: Railway (template Evolution + este kit no
+mesmo projeto, com domínio HTTPS automático). Para **custo zero real**:
+Render/Vercel + cron do GitHub Actions acordando o serviço.
+
+> Aviso: em plano free com sleep, o agendador interno não roda enquanto o
+> serviço dorme. Use o cron do GitHub Actions (`templates/github-actions-cron.yml`)
+> para disparar `/cron` ou `/api/cron` no horário desejado.
 
 ## Healthcheck
 
